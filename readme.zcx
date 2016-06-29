@@ -1,0 +1,35 @@
+copy_GOsearchresult.sh # convert I-TASSER suite output to COFACTOR3 output
+cat_GO_result.sh # concatenate all COFACTOR GO prediction in output
+                 # directory to "result" folder. Remove root of 3 GO 
+                 # trees and "protein binding" GO terms
+backpropagate_parent_term.py # trace back all parent GO terms in the result
+obo2csv.py            # module imported by "backpropagate_parent_term.py"
+create_PDB_GOterms.py # module imported by "backpropagate_parent_term.py"
+
+'''how to evaluate COFACTOR GO prediction accuracy in current directory'''
+copy_GOsearchresult.sh . # on peter's server
+cat_GO_result.sh .
+cd result
+backpropagate_parent_term.py COFACTOR_GO.csv > COFACTOR_GO.is_a.csv
+grep -P "\tF\t" COFACTOR_GO.is_a.csv > COFACTOR_MF.is_a.csv
+grep -P "\tP\t" COFACTOR_GO.is_a.csv > COFACTOR_BP.is_a.csv
+grep -P "\tC\t" COFACTOR_GO.is_a.csv > COFACTOR_CC.is_a.csv
+calROC_COFACTOR.py UNIPROT_GOterms.is_a.csv COFACTOR_MF.is_a.csv ROC_MF.csv ROC_MF.png
+calROC_COFACTOR.py UNIPROT_GOterms.is_a.csv COFACTOR_BP.is_a.csv ROC_BP.csv ROC_BP.png
+calROC_COFACTOR.py UNIPROT_GOterms.is_a.csv COFACTOR_CC.is_a.csv ROC_CC.csv ROC_CC.png
+
+'''how to evaluate NAIVE BASELINE GO prediction accuracy current directory'''
+calROC_COFACTOR.py UNIPROT_GOterms.is_a.csv NAIVE_MF.is_a.csv ROC_MF.csv ROC_MF.png
+calROC_COFACTOR.py UNIPROT_GOterms.is_a.csv NAIVE_BP.is_a.csv ROC_BP.csv ROC_BP.png
+calROC_COFACTOR.py UNIPROT_GOterms.is_a.csv NAIVE_CC.is_a.csv ROC_CC.csv ROC_CC.png
+
+'''how to evaluate GoFDR GO prediction accuracy in current directory'''
+cat_GoFDR_result.sh
+cd result
+backpropagate_parent_term.py GoFDR_GO.csv > GoFDR_GO.is_a.csv
+grep -P "\tF\t" GoFDR_GO.is_a.csv > GoFDR_MF.is_a.csv
+grep -P "\tP\t" GoFDR_GO.is_a.csv > GoFDR_BP.is_a.csv
+grep -P "\tC\t" GoFDR_GO.is_a.csv > GoFDR_CC.is_a.csv
+calROC_COFACTOR.py UNIPROT_GOterms.is_a.csv GoFDR_MF.is_a.csv ROC_MF.csv ROC_MF.png
+calROC_COFACTOR.py UNIPROT_GOterms.is_a.csv GoFDR_BP.is_a.csv ROC_BP.csv ROC_BP.png
+calROC_COFACTOR.py UNIPROT_GOterms.is_a.csv GoFDR_CC.is_a.csv ROC_CC.csv ROC_CC.png
