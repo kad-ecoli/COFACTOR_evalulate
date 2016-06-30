@@ -14,22 +14,27 @@ backpropagate_parent_term.py COFACTOR_GO.csv > COFACTOR_GO.is_a.csv
 grep -P "\tF\t" COFACTOR_GO.is_a.csv > COFACTOR_MF.is_a.csv
 grep -P "\tP\t" COFACTOR_GO.is_a.csv > COFACTOR_BP.is_a.csv
 grep -P "\tC\t" COFACTOR_GO.is_a.csv > COFACTOR_CC.is_a.csv
-calROC_COFACTOR.py UNIPROT_GOterms.is_a.csv COFACTOR_MF.is_a.csv ROC_MF.csv ROC_MF.png
-calROC_COFACTOR.py UNIPROT_GOterms.is_a.csv COFACTOR_BP.is_a.csv ROC_BP.csv ROC_BP.png
-calROC_COFACTOR.py UNIPROT_GOterms.is_a.csv COFACTOR_CC.is_a.csv ROC_CC.csv ROC_CC.png
+calROC_COFACTOR.py UNIPROT_GOterms.{MF,BP,CC}.is_a.csv \
+    COFACTOR_{MF,BP,CC}.is_a.csv ROC_{MF,BP,CC}.csv ROC_{MF,BP,CC}.png
 
 '''how to evaluate NAIVE BASELINE GO prediction accuracy current directory'''
-calROC_COFACTOR.py UNIPROT_GOterms.is_a.csv NAIVE_MF.is_a.csv ROC_MF.csv ROC_MF.png
-calROC_COFACTOR.py UNIPROT_GOterms.is_a.csv NAIVE_BP.is_a.csv ROC_BP.csv ROC_BP.png
-calROC_COFACTOR.py UNIPROT_GOterms.is_a.csv NAIVE_CC.is_a.csv ROC_CC.csv ROC_CC.png
+calROC_COFACTOR.py UNIPROT_GOterms.{MF,BP,CC}.is_a.csv \
+    NAIVE_{MF,BP,CC}.is_a.csv ROC_{MF,BP,CC}.csv ROC_{MF,BP,CC}.png
 
 '''how to evaluate GoFDR GO prediction accuracy in current directory'''
-cat_GoFDR_result.sh
+cat_GoFDR_result.sh .
 cd result
 backpropagate_parent_term.py GoFDR_GO.csv > GoFDR_GO.is_a.csv
 grep -P "\tF\t" GoFDR_GO.is_a.csv > GoFDR_MF.is_a.csv
 grep -P "\tP\t" GoFDR_GO.is_a.csv > GoFDR_BP.is_a.csv
 grep -P "\tC\t" GoFDR_GO.is_a.csv > GoFDR_CC.is_a.csv
-calROC_COFACTOR.py UNIPROT_GOterms.is_a.csv GoFDR_MF.is_a.csv ROC_MF.csv ROC_MF.png
-calROC_COFACTOR.py UNIPROT_GOterms.is_a.csv GoFDR_BP.is_a.csv ROC_BP.csv ROC_BP.png
-calROC_COFACTOR.py UNIPROT_GOterms.is_a.csv GoFDR_CC.is_a.csv ROC_CC.csv ROC_CC.png
+calROC_COFACTOR.py UNIPROT_GOterms.{MF,BP,CC}.is_a.csv \
+    GoFDR_{MF,BP,CC}.is_a.csv ROC_{MF,BP,CC}.csv ROC_{MF,BP,CC}.png
+
+'''how to evaluate blastp baseline GO prediction accuracy in current directory'''
+cat_blastp_result.sh .
+cd result
+calROC_COFACTOR.py UNIPROT_GOterms.{MF,BP,CC}.is_a.csv \
+    blastp_{globalID,localID,GOfreq}_{MF,BP,CC}.is_a.csv \
+    ROC_{globalID,localID,GOfreq}_{MF,BP,CC}.csv \
+    ROC_{globalID,localID,GOfreq}_{MF,BP,CC}.png
