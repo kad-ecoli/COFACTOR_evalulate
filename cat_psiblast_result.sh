@@ -1,8 +1,8 @@
 #!/bin/bash
 if [ -z "$1" ];then
     echo "$(basename $0) outdir/
-    concatenate all blastp baseline GO prediction 'outdir/*/blastp_*_ under outdir/
-    output the result to outdir/result/blastp_*_*.csv
+    concatenate all psiblast baseline GO prediction 'outdir/*/psiblast_*_ under outdir/
+    output the result to outdir/result/psiblast_*_*.csv
     The following GO terms are excluded:
         GO:0005515 ! protein binding
         GO:0005488 ! binding
@@ -16,45 +16,45 @@ OUTDIR=$(readlink -m $1)
 echo $OUTDIR
 cd $OUTDIR
 mkdir -p $OUTDIR/result
-MF_RESULT_globalID="$OUTDIR/result/blastp_globalID_MF.csv"
-CC_RESULT_globalID="$OUTDIR/result/blastp_globalID_CC.csv"
-BP_RESULT_globalID="$OUTDIR/result/blastp_globalID_BP.csv"
+MF_RESULT_globalID="$OUTDIR/result/psiblast_globalID_MF.csv"
+CC_RESULT_globalID="$OUTDIR/result/psiblast_globalID_CC.csv"
+BP_RESULT_globalID="$OUTDIR/result/psiblast_globalID_BP.csv"
 rm -f $MF_RESULT_globalID $CC_RESULT_globalID $BP_RESULT_globalID
 touch $MF_RESULT_globalID $CC_RESULT_globalID $BP_RESULT_globalID
-MF_RESULT_localID="$OUTDIR/result/blastp_localID_MF.csv"
-CC_RESULT_localID="$OUTDIR/result/blastp_localID_CC.csv"
-BP_RESULT_localID="$OUTDIR/result/blastp_localID_BP.csv"
+MF_RESULT_localID="$OUTDIR/result/psiblast_localID_MF.csv"
+CC_RESULT_localID="$OUTDIR/result/psiblast_localID_CC.csv"
+BP_RESULT_localID="$OUTDIR/result/psiblast_localID_BP.csv"
 rm -f $MF_RESULT_localID $CC_RESULT_localID $BP_RESULT_localID
 touch $MF_RESULT_localID $CC_RESULT_localID $BP_RESULT_localID
-MF_RESULT_GOfreq="$OUTDIR/result/blastp_GOfreq_MF.csv"
-CC_RESULT_GOfreq="$OUTDIR/result/blastp_GOfreq_CC.csv"
-BP_RESULT_GOfreq="$OUTDIR/result/blastp_GOfreq_BP.csv"
+MF_RESULT_GOfreq="$OUTDIR/result/psiblast_GOfreq_MF.csv"
+CC_RESULT_GOfreq="$OUTDIR/result/psiblast_GOfreq_CC.csv"
+BP_RESULT_GOfreq="$OUTDIR/result/psiblast_GOfreq_BP.csv"
 rm -f $MF_RESULT_GOfreq $CC_RESULT_GOfreq $BP_RESULT_GOfreq
 touch $MF_RESULT_GOfreq $CC_RESULT_GOfreq $BP_RESULT_GOfreq
-MF_RESULT_evalue="$OUTDIR/result/blastp_evalue_MF.csv"
-CC_RESULT_evalue="$OUTDIR/result/blastp_evalue_CC.csv"
-BP_RESULT_evalue="$OUTDIR/result/blastp_evalue_BP.csv"
+MF_RESULT_evalue="$OUTDIR/result/psiblast_evalue_MF.csv"
+CC_RESULT_evalue="$OUTDIR/result/psiblast_evalue_CC.csv"
+BP_RESULT_evalue="$OUTDIR/result/psiblast_evalue_BP.csv"
 rm -f $MF_RESULT_evalue $CC_RESULT_evalue $BP_RESULT_evalue
 touch $MF_RESULT_evalue $CC_RESULT_evalue $BP_RESULT_evalue
 
 for S in `ls`;do
-    if [ -s $S/blastp_globalID_MF ];then
-        cat $S/blastp_globalID_MF|sed "s/^/$S\t/g" >> $MF_RESULT_globalID
-        cat $S/blastp_localID_MF |sed "s/^/$S\t/g" >> $MF_RESULT_localID
-        cat $S/blastp_GOfreq_MF  |sed "s/^/$S\t/g" >> $MF_RESULT_GOfreq
-        cat $S/blastp_evalue_MF  |sed "s/^/$S\t/g" >> $MF_RESULT_evalue
+    if [ -s $S/psiblast_globalID_MF ];then
+        cat $S/psiblast_globalID_MF|sed "s/^/$S\t/g" >> $MF_RESULT_globalID
+        cat $S/psiblast_localID_MF |sed "s/^/$S\t/g" >> $MF_RESULT_localID
+        cat $S/psiblast_GOfreq_MF  |sed "s/^/$S\t/g" >> $MF_RESULT_GOfreq
+        cat $S/psiblast_evalue_MF  |sed "s/^/$S\t/g" >> $MF_RESULT_evalue
     fi
-    if [ -s $S/blastp_globalID_BP ];then
-        cat $S/blastp_globalID_BP|sed "s/^/$S\t/g" >> $BP_RESULT_globalID
-        cat $S/blastp_localID_BP |sed "s/^/$S\t/g" >> $BP_RESULT_localID
-        cat $S/blastp_GOfreq_BP  |sed "s/^/$S\t/g" >> $BP_RESULT_GOfreq
-        cat $S/blastp_evalue_BP  |sed "s/^/$S\t/g" >> $BP_RESULT_evalue
+    if [ -s $S/psiblast_globalID_BP ];then
+        cat $S/psiblast_globalID_BP|sed "s/^/$S\t/g" >> $BP_RESULT_globalID
+        cat $S/psiblast_localID_BP |sed "s/^/$S\t/g" >> $BP_RESULT_localID
+        cat $S/psiblast_GOfreq_BP  |sed "s/^/$S\t/g" >> $BP_RESULT_GOfreq
+        cat $S/psiblast_evalue_BP  |sed "s/^/$S\t/g" >> $BP_RESULT_evalue
     fi
-    if [ -s $S/blastp_globalID_CC ];then
-        cat $S/blastp_globalID_CC|sed "s/^/$S\t/g" >> $CC_RESULT_globalID
-        cat $S/blastp_localID_CC |sed "s/^/$S\t/g" >> $CC_RESULT_localID
-        cat $S/blastp_GOfreq_CC  |sed "s/^/$S\t/g" >> $CC_RESULT_GOfreq
-        cat $S/blastp_evalue_CC  |sed "s/^/$S\t/g" >> $CC_RESULT_evalue
+    if [ -s $S/psiblast_globalID_CC ];then
+        cat $S/psiblast_globalID_CC|sed "s/^/$S\t/g" >> $CC_RESULT_globalID
+        cat $S/psiblast_localID_CC |sed "s/^/$S\t/g" >> $CC_RESULT_localID
+        cat $S/psiblast_GOfreq_CC  |sed "s/^/$S\t/g" >> $CC_RESULT_GOfreq
+        cat $S/psiblast_evalue_CC  |sed "s/^/$S\t/g" >> $CC_RESULT_evalue
     fi
 done
 
