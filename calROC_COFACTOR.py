@@ -18,10 +18,10 @@ accesion	GOterm	Aspect	Cscore	name(optional)
 P40710	GO:0043167	F	0.07	ion binding
 
     ROC.csv is the output tab-eliminated file in the following format:
-threshold	precision	recall	TPR	FPR	Fmeasure
+    threshold precision recall FPR Fmeasure tp fp tn fn MCC
     ROC.png is the output plot for ROC curve and precision recall curve
 
-    print MCC using 0.5 as threshold, maximum F-measure, AUC
+    print MCC using 0.5 as threshold, maximum F-measure, AUC, maximum MCC
 '''
 import sys,os
 import numpy as np 
@@ -37,7 +37,7 @@ def calROC_COFACTOR(UNIPROT_GOterms,COFACTOR_GO):
     '''calculate precision, recall, TPR, FPR, F-measure using experimental GO 
     annotation text "UNIPROT_GOterms" and COFACTOR prediction result text
     "COFACTOR_GO". Return a numpy array where each column correspondes to
-    threshold	precision	recall/TPR	FPR	Fmeasure	TP	FP	TN	FN
+    threshold precision recall FPR Fmeasure tp fp tn fn MCC
     '''
     ## parsing COFACTOR prediction result
     COFACTOR_df=pd.read_csv(COFACTOR_GO,sep='\t',header=None, 
@@ -82,12 +82,13 @@ def calROC_COFACTOR(UNIPROT_GOterms,COFACTOR_GO):
         '^'+'$|^'.join(accession_list)+'$')]
 
     cscore_list=sorted(set(list(COFACTOR_df.Cscore)))
-    #cscore_list=sorted(set(list(COFACTOR_df.Cscore)+[0,1]))
-    ROC_array=np.zeros((len(cscore_list)+2,9))
+    ROC_array=np.zeros((len(cscore_list)+2,10))
+    #ROC_array=np.zeros((len(cscore_list),10))
     ROC_array[1:len(cscore_list)+1,0]=cscore_list
+    #ROC_array[:,0]=cscore_list
     # add cscore==0 and cscore==1
-    ROC_array[0,:]=[0,condition_positive/total,1,1,0,condition_positive,condition_negative,0,0]
-    ROC_array[-1,:]=[1,1,0,0,0,0,0,condition_negative,condition_negative]
+    ROC_array[0,:]=[0,condition_positive/total,1,1,0,condition_positive,condition_negative,0,0,0]
+    ROC_array[-1,:]=[1,1,0,0,0,0,0,condition_negative,condition_negative,0]
 
     for idx,threshold in enumerate(cscore_list):
         sys.stderr.write("cscore threshold=%.8f\n"%(threshold))
@@ -104,7 +105,10 @@ def calROC_COFACTOR(UNIPROT_GOterms,COFACTOR_GO):
         recall=tp/condition_positive
         FPR=fp/condition_negative
         Fmeasure=2.*(precision*recall)/(precision+recall) if (precision+recall) else 0
-        ROC_array[idx+1,1:]=[precision,recall,FPR,Fmeasure,tp,fp,tn,fn]
+        MCC=(tp+fp)*(tp+fn)*(tn+fp)*(tn+fn)
+        MCC=(tp*tn-fp*fn)/MCC**.5 if MCC else 0
+        ROC_array[idx+1,1:]=[precision,recall,FPR,Fmeasure,tp,fp,tn,fn,MCC]
+        #ROC_array[idx  ,1:]=[precision,recall,FPR,Fmeasure,tp,fp,tn,fn,MCC]
     AUC=0.
     for idx in range(1,ROC_array.shape[0]):
         if idx==0:
@@ -125,11 +129,12 @@ if __name__=="__main__":
         UNIPROT_GOterms=sys.argv[1],COFACTOR_GO=sys.argv[2])
 
     Fmeasure_max=ROC_array[:,4].max()
-    sys.stdout.write("max{Fmeasure}=%.4f\tAUC=%.4f\n"%(Fmeasure_max,AUC))
+    MCC_max=ROC_array[:,9].max()
+    sys.stdout.write("Fmax=%.4f\tAUC=%.4f\tMCC=%.4f\n"%(Fmeasure_max,AUC,MCC_max))
 
     csvfile=sys.argv[3] if len(sys.argv)>3 else "ROC.csv"
     np.savetxt(csvfile,ROC_array,delimiter='\t',fmt="%.4f",
-        header="cscore_threshold\tprecision\trecall/TPR\tFPR\tF-measure\ttp\tfp\ttn\tfn")
+        header="cscore_threshold\tprecision\trecall\tFPR\tFmeasure\ttp\tfp\ttn\tfn\tMCC")
 
     pngfile=sys.argv[4] if len(sys.argv)>4 else "ROC.png"
     fig= pylab.figure()
