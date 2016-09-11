@@ -37,24 +37,49 @@ BP_RESULT_evalue="$OUTDIR/result/blastp_evalue_BP.csv"
 rm -f $MF_RESULT_evalue $CC_RESULT_evalue $BP_RESULT_evalue
 touch $MF_RESULT_evalue $CC_RESULT_evalue $BP_RESULT_evalue
 
+MF_RESULT_gwGOfreq="$OUTDIR/result/blastp_gwGOfreq_MF.csv"
+CC_RESULT_gwGOfreq="$OUTDIR/result/blastp_gwGOfreq_CC.csv"
+BP_RESULT_gwGOfreq="$OUTDIR/result/blastp_gwGOfreq_BP.csv"
+rm -f $MF_RESULT_gwGOfreq $CC_RESULT_gwGOfreq $BP_RESULT_gwGOfreq
+touch $MF_RESULT_gwGOfreq $CC_RESULT_gwGOfreq $BP_RESULT_gwGOfreq
+MF_RESULT_lwGOfreq="$OUTDIR/result/blastp_lwGOfreq_MF.csv"
+CC_RESULT_lwGOfreq="$OUTDIR/result/blastp_lwGOfreq_CC.csv"
+BP_RESULT_lwGOfreq="$OUTDIR/result/blastp_lwGOfreq_BP.csv"
+rm -f $MF_RESULT_lwGOfreq $CC_RESULT_lwGOfreq $BP_RESULT_lwGOfreq
+touch $MF_RESULT_lwGOfreq $CC_RESULT_lwGOfreq $BP_RESULT_lwGOfreq
+MF_RESULT_ewGOfreq="$OUTDIR/result/blastp_ewGOfreq_MF.csv"
+CC_RESULT_ewGOfreq="$OUTDIR/result/blastp_ewGOfreq_CC.csv"
+BP_RESULT_ewGOfreq="$OUTDIR/result/blastp_ewGOfreq_BP.csv"
+rm -f $MF_RESULT_ewGOfreq $CC_RESULT_ewGOfreq $BP_RESULT_ewGOfreq
+touch $MF_RESULT_ewGOfreq $CC_RESULT_ewGOfreq $BP_RESULT_ewGOfreq
+
 for S in `ls`;do
     if [ -s $S/blastp_globalID_MF ];then
         cat $S/blastp_globalID_MF|sed "s/^/$S\t/g" >> $MF_RESULT_globalID
         cat $S/blastp_localID_MF |sed "s/^/$S\t/g" >> $MF_RESULT_localID
         cat $S/blastp_GOfreq_MF  |sed "s/^/$S\t/g" >> $MF_RESULT_GOfreq
         cat $S/blastp_evalue_MF  |sed "s/^/$S\t/g" >> $MF_RESULT_evalue
+        cat $S/blastp_gwGOfreq_MF|sed "s/^/$S\t/g" >> $MF_RESULT_gwGOfreq
+        cat $S/blastp_lwGOfreq_MF|sed "s/^/$S\t/g" >> $MF_RESULT_lwGOfreq
+        cat $S/blastp_ewGOfreq_MF|sed "s/^/$S\t/g" >> $MF_RESULT_ewGOfreq
     fi
     if [ -s $S/blastp_globalID_BP ];then
         cat $S/blastp_globalID_BP|sed "s/^/$S\t/g" >> $BP_RESULT_globalID
         cat $S/blastp_localID_BP |sed "s/^/$S\t/g" >> $BP_RESULT_localID
         cat $S/blastp_GOfreq_BP  |sed "s/^/$S\t/g" >> $BP_RESULT_GOfreq
         cat $S/blastp_evalue_BP  |sed "s/^/$S\t/g" >> $BP_RESULT_evalue
+        cat $S/blastp_gwGOfreq_BP|sed "s/^/$S\t/g" >> $BP_RESULT_gwGOfreq
+        cat $S/blastp_lwGOfreq_BP|sed "s/^/$S\t/g" >> $BP_RESULT_lwGOfreq
+        cat $S/blastp_ewGOfreq_BP|sed "s/^/$S\t/g" >> $BP_RESULT_ewGOfreq
     fi
     if [ -s $S/blastp_globalID_CC ];then
         cat $S/blastp_globalID_CC|sed "s/^/$S\t/g" >> $CC_RESULT_globalID
         cat $S/blastp_localID_CC |sed "s/^/$S\t/g" >> $CC_RESULT_localID
         cat $S/blastp_GOfreq_CC  |sed "s/^/$S\t/g" >> $CC_RESULT_GOfreq
         cat $S/blastp_evalue_CC  |sed "s/^/$S\t/g" >> $CC_RESULT_evalue
+        cat $S/blastp_gwGOfreq_CC|sed "s/^/$S\t/g" >> $CC_RESULT_gwGOfreq
+        cat $S/blastp_lwGOfreq_CC|sed "s/^/$S\t/g" >> $CC_RESULT_lwGOfreq
+        cat $S/blastp_ewGOfreq_CC|sed "s/^/$S\t/g" >> $CC_RESULT_ewGOfreq
     fi
 done
 
